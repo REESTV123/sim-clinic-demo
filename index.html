@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sim Clinic practice call</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0a0a0f; --panel: #1c1c28; --line: #2e2e40;
+    --text: #f8f6f2; --muted: #9898a8; --red: #e01b24;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh; background: var(--ink); color: var(--text);
+    font: 400 17px/1.55 "DM Sans", system-ui, sans-serif;
+    display: flex; justify-content: center; padding: 48px 20px 120px;
+  }
+  main { width: 100%; max-width: 540px; }
+  header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 40px; }
+  .brand { font-family: "DM Serif Display", Georgia, serif; font-size: 28px; }
+  .by { color: var(--muted); font-size: 14px; }
+  .by strong { color: var(--red); font-weight: 700; letter-spacing: .04em; }
+  h1 { font: 400 16px/1.4 "DM Sans", sans-serif; color: var(--muted); margin: 0 0 12px; }
+  .slip { background: var(--panel); border-left: 4px solid var(--red); padding: 28px 28px 24px; }
+  .doctor { font-family: "DM Serif Display", Georgia, serif; font-size: clamp(34px, 8vw, 46px); line-height: 1.05; margin: 0 0 6px; }
+  .where { color: var(--muted); margin: 0 0 24px; }
+  dl { margin: 0; display: grid; grid-template-columns: 9.5em 1fr; gap: 10px 16px; border-top: 1px solid var(--line); padding-top: 20px; }
+  dt { color: var(--muted); }
+  dd { margin: 0; }
+  .start { margin: 24px 0 0; font-size: 15px; color: var(--text); }
+  .start b { color: var(--red); font-weight: 500; }
+  .actions { display: flex; flex-wrap: wrap; gap: 12px; margin: 28px 0 40px; }
+  button, .pick a {
+    font: 500 16px "DM Sans", sans-serif; cursor: pointer; text-decoration: none;
+    border: 1px solid var(--line); background: transparent; color: var(--text); padding: 12px 18px;
+  }
+  button.primary { background: var(--red); border-color: var(--red); }
+  button:hover, .pick a:hover { border-color: var(--text); }
+  button:focus-visible, a:focus-visible, summary:focus-visible { outline: 2px solid var(--text); outline-offset: 3px; }
+  details { border-top: 1px solid var(--line); padding: 16px 0; }
+  summary { cursor: pointer; font-weight: 500; }
+  details p, details li { color: var(--muted); font-size: 15px; }
+  details ul { padding-left: 20px; margin: 8px 0; }
+  .pick { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+  .pick a { font-size: 14px; padding: 8px 12px; }
+  .note { color: var(--muted); font-size: 13px; margin-top: 32px; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <span class="brand">Sim Clinic</span>
+    <span class="by">by <strong>REESTV</strong></span>
+  </header>
+
+  <h1>Your next appointment</h1>
+  <section class="slip" aria-live="polite">
+    <p class="doctor" id="name"></p>
+    <p class="where" id="where"></p>
+    <dl>
+      <dt>Time with you</dt><dd id="time"></dd>
+      <dt>Adoption ladder</dt><dd id="level"></dd>
+      <dt>Your objective</dt><dd id="objective"></dd>
+      <dt>Product</dt><dd>Quellara (talmesudine) 10 mg, Halcyra</dd>
+    </dl>
+    <p class="start">When you're ready, tap the <b>call button</b> in the bottom corner and allow your microphone.</p>
+  </section>
+
+  <div class="actions">
+    <button class="primary" id="next" type="button">Give me a different doctor</button>
+  </div>
+
+  <details>
+    <summary>Quellara product card</summary>
+    <p>Fictional demo product. Use only these facts in the call.</p>
+    <ul>
+      <li>Adults with chronic insomnia disorder when sleep hygiene and CBT-I have not been enough. Used alongside them, not instead.</li>
+      <li>10 mg tablet once nightly. Not PBS-listed; about $69 a month privately. PBS submission lodged, no listing date.</li>
+      <li>QUIET-1, 12 weeks, 912 adults aged 18 to 80, versus placebo: total sleep time +41 min vs +18 min; time to fall asleep −24 min vs −11 min; next-day alertness no different from placebo.</li>
+      <li>12-month extension (410 patients): no withdrawal effects on stopping.</li>
+      <li>Side effects vs placebo: headache 6% vs 4%, daytime drowsiness 5% vs 2%, unusual dreams 3% vs 1%.</li>
+      <li>Cautions: not with alcohol; avoid driving the morning after the first dose until patients know how it affects them; not studied in pregnancy.</li>
+      <li>Report any possible adverse event you hear about to Halcyra within 24 hours.</li>
+    </ul>
+  </details>
+
+  <details>
+    <summary>Practise with a particular doctor or level</summary>
+    <div class="pick" id="pick"></div>
+    <div class="pick" id="pickLevel"></div>
+  </details>
+
+  <p class="note">Halcyra, Quellara and all doctors are fictional. Calls are processed by ElevenLabs for training only.</p>
+</main>
+
+<script>
+  // Agent IDs from the REESTV ElevenLabs workspace. Persona type is deliberately not shown to the rep.
+  const DOCTORS = {
+    doyle: {
+      agent: "agent_2301m42wqz8betathrvyrqwzeph7",
+      name: "Dr Karen Doyle",
+      where: "GP, bulk-billing practice in Sunbury",
+      time: "About 5 minutes"
+    },
+    nguyen: {
+      agent: "agent_1801m431y7jwf5ytddwwjfm6hvp4",
+      name: "Dr Tom Nguyen",
+      where: "GP, family practice in Footscray",
+      time: "About 5 minutes"
+    },
+    collins: {
+      agent: "agent_8501m431yqnae9bazm4jtckep56e",
+      name: "Dr Andrew Collins",
+      where: "GP with an interest in sleep medicine, Geelong",
+      time: "About 8 minutes"
+    }
+  };
+  // Adoption ladder: where this doctor is with Quellara. The level name is passed to the agent as a dynamic variable.
+  const LEVELS = {
+    1: { name: "Awareness", note: "Knows little or nothing about Quellara", objective: "Create awareness and link Quellara to their patients. Aim for them to identify a type of patient it might suit." },
+    2: { name: "Consideration", note: "Weighing up evidence, cost and place in therapy", objective: "Find and resolve their main concern. Aim for agreement to try it in one specific patient." },
+    3: { name: "Trial", note: "Has prescribed it for one or two patients", objective: "Follow up their experience, check patient selection and handle any issues. Aim for use in more suitable patients." },
+    4: { name: "Adoption", note: "Prescribes it regularly for a defined patient type", objective: "Reinforce appropriate use and explore another suitable group within the indication." }
+  };
+  const KEYS = Object.keys(DOCTORS);
+  const LAST = "simclinic-last-doctor";
+
+  function readLast() { try { return localStorage.getItem(LAST); } catch (e) { return null; } }
+  function saveLast(k) { try { localStorage.setItem(LAST, k); } catch (e) {} }
+
+  function choose() {
+    const asked = new URLSearchParams(location.search).get("d");
+    if (asked && DOCTORS[asked]) return asked;
+    const last = readLast();
+    const pool = KEYS.filter(k => k !== last);
+    return pool[Math.floor(Math.random() * pool.length)];
+  }
+
+  const key = choose();
+  const doc = DOCTORS[key];
+  saveLast(key);
+  const askedLevel = new URLSearchParams(location.search).get("l");
+  const levelNo = LEVELS[askedLevel] ? Number(askedLevel) : 1 + Math.floor(Math.random() * 4);
+  const level = LEVELS[levelNo];
+
+  document.getElementById("name").textContent = doc.name;
+  document.getElementById("where").textContent = doc.where;
+  document.getElementById("time").textContent = doc.time;
+  document.getElementById("level").textContent = levelNo + ". " + level.name + ": " + level.note.toLowerCase();
+  document.getElementById("objective").textContent = level.objective;
+  document.title = "Sim Clinic: " + doc.name;
+
+  const widget = document.createElement("elevenlabs-convai");
+  widget.setAttribute("agent-id", doc.agent);
+  widget.setAttribute("dynamic-variables", JSON.stringify({ adoption_level: level.name }));
+  document.body.appendChild(widget);
+
+  const pick = document.getElementById("pick");
+  KEYS.forEach(k => {
+    const a = document.createElement("a");
+    a.href = "?d=" + k + "&l=" + levelNo;
+    a.textContent = DOCTORS[k].name;
+    pick.appendChild(a);
+  });
+
+  const pickLevel = document.getElementById("pickLevel");
+  Object.keys(LEVELS).forEach(n => {
+    const a = document.createElement("a");
+    a.href = "?d=" + key + "&l=" + n;
+    a.textContent = n + ". " + LEVELS[n].name;
+    pickLevel.appendChild(a);
+  });
+
+  document.getElementById("next").addEventListener("click", () => {
+    location.href = location.pathname; // drops ?d= and ?l= so a new random doctor and level are chosen; never the same doctor twice in a row
+  });
+</script>
+<script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
+</body>
+</html>
