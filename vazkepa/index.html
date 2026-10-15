@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Sim Clinic: Vazkepa practice call</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0a0a0f; --panel: #1c1c28; --line: #2e2e40;
+    --text: #f8f6f2; --muted: #9898a8; --red: #e01b24;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh; background: var(--ink); color: var(--text);
+    font: 400 17px/1.55 "DM Sans", system-ui, sans-serif;
+    display: flex; justify-content: center; padding: 48px 20px 120px;
+  }
+  main { width: 100%; max-width: 540px; }
+  header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
+  .brand { font-family: "DM Serif Display", Georgia, serif; font-size: 28px; }
+  .by { color: var(--muted); font-size: 14px; }
+  .by strong { color: var(--red); font-weight: 700; letter-spacing: .04em; }
+  .scenario { color: var(--muted); font-size: 14px; margin: 0 0 32px; }
+  .scenario b { color: var(--text); font-weight: 500; }
+  h1 { font: 400 16px/1.4 "DM Sans", sans-serif; color: var(--muted); margin: 0 0 12px; }
+  .slip { background: var(--panel); border-left: 4px solid var(--red); padding: 28px 28px 24px; }
+  .doctor { font-family: "DM Serif Display", Georgia, serif; font-size: clamp(34px, 8vw, 46px); line-height: 1.05; margin: 0 0 6px; }
+  .where { color: var(--muted); margin: 0 0 24px; }
+  dl { margin: 0; display: grid; grid-template-columns: 9.5em 1fr; gap: 10px 16px; border-top: 1px solid var(--line); padding-top: 20px; }
+  dt { color: var(--muted); }
+  dd { margin: 0; }
+  .start { margin: 24px 0 0; font-size: 15px; color: var(--text); }
+  .start b { color: var(--red); font-weight: 500; }
+  .actions { display: flex; flex-wrap: wrap; gap: 12px; margin: 28px 0 40px; }
+  button, .pick a {
+    font: 500 16px "DM Sans", sans-serif; cursor: pointer; text-decoration: none;
+    border: 1px solid var(--line); background: transparent; color: var(--text); padding: 12px 18px;
+  }
+  button.primary { background: var(--red); border-color: var(--red); }
+  button:hover, .pick a:hover { border-color: var(--text); }
+  button:focus-visible, a:focus-visible, summary:focus-visible { outline: 2px solid var(--text); outline-offset: 3px; }
+  details { border-top: 1px solid var(--line); padding: 16px 0; }
+  summary { cursor: pointer; font-weight: 500; }
+  details p, details li { color: var(--muted); font-size: 15px; }
+  details ul { padding-left: 20px; margin: 8px 0; }
+  details h3 { font: 500 15px "DM Sans", sans-serif; color: var(--text); margin: 16px 0 4px; }
+  .pick { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+  .pick a { font-size: 14px; padding: 8px 12px; }
+  .note { color: var(--muted); font-size: 13px; margin-top: 32px; }
+  .other { color: var(--muted); font-size: 14px; }
+  .other a { color: var(--text); }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <span class="brand">Sim Clinic</span>
+    <span class="by">by <strong>REESTV</strong></span>
+  </header>
+  <p class="scenario">Scenario: <b>VAZKEPA (icosapent ethyl)</b> · GP call</p>
+
+  <h1>Your next appointment</h1>
+  <section class="slip" aria-live="polite">
+    <p class="doctor" id="name">Loading…</p>
+    <p class="where" id="where"></p>
+    <dl>
+      <dt>Time with you</dt><dd id="time"></dd>
+      <dt>Adoption ladder</dt><dd id="level"></dd>
+      <dt>Your objective</dt><dd id="objective"></dd>
+      <dt>Product</dt><dd>VAZKEPA (icosapent ethyl) 998 mg capsules, CSL Seqirus</dd>
+    </dl>
+    <p class="start">When you're ready, tap the <b>call button</b> in the bottom corner and allow your microphone.</p>
+  </section>
+
+  <div class="actions">
+    <button class="primary" id="next" type="button">Give me a different doctor</button>
+  </div>
+
+  <details>
+    <summary>VAZKEPA product card</summary>
+    <p>Use only these facts in the call. Anything else is a Medical Information request (1800 642 865).</p>
+    <h3>Indication</h3>
+    <ul>
+      <li>Reduces the risk of CV events in adult statin-treated patients at high CV risk with triglycerides ≥1.7 mmol/L and established CV disease, or diabetes and ≥1 other CV risk factor.</li>
+    </ul>
+    <h3>Efficacy: REDUCE-IT</h3>
+    <ul>
+      <li>8,179 statin-treated patients with established CVD, or diabetes and ≥1 other risk factor; median follow-up 4.9 years.</li>
+      <li>5-point MACE: 17.2% vs 22.0% placebo. RRR 25%, ARR 4.8%, NNT 21; HR 0.75 (95% CI 0.68–0.83), p&lt;0.001.</li>
+      <li>CV death RRR 20% (HR 0.80, p=0.03); MI RRR 31% (HR 0.69, p&lt;0.001); stroke RRR 28% (HR 0.72, p=0.01).</li>
+      <li>Around 1 in 3 statin (± ezetimibe) patients after MI or unstable angina have another CV event within 7 years (IMPROVE-IT).</li>
+    </ul>
+    <h3>Dosing</h3>
+    <ul>
+      <li>Two capsules twice a day, with or after a meal. Swallow whole; do not break, crush, dissolve or chew.</li>
+    </ul>
+    <h3>Safety</h3>
+    <ul>
+      <li>Generally well tolerated over 4.9 years. More frequent than placebo: bleeding 11.8% vs 9.9%, peripheral oedema 6.5% vs 5.0%, constipation 5.4% vs 3.6%, atrial fibrillation 5.3% vs 3.9%.</li>
+      <li>Serious bleeding 2.7% vs 2.1% (p=0.06). Patients on antithrombotic agents may be at increased risk of bleeding; monitor periodically.</li>
+      <li>Increased risk of AF/flutter requiring hospitalisation, greater with prior AF; monitor and perform ECG when clinically indicated.</li>
+      <li>Contraindicated with hypersensitivity to icosapent ethyl, soya or excipients. Caution with fish or shellfish allergy. Monitor ALT/AST in hepatic impairment.</li>
+    </ul>
+    <h3>Compliance</h3>
+    <ul>
+      <li>Report any possible adverse event you hear about to CSL Seqirus, following company process.</li>
+      <li>No comparative claims against fish oil, fibrates, ezetimibe or PCSK9 inhibitors beyond the approved wording.</li>
+    </ul>
+  </details>
+
+  <details>
+    <summary>PBS eligibility checklist</summary>
+    <p>Authority Required (STREAMLINED). Initiation 15889, continuation 15927. All of:</p>
+    <ul>
+      <li><b>Established ASCVD:</b> coronary artery disease, cerebrovascular or carotid disease, or peripheral arterial disease.</li>
+      <li><b>Statin:</b> stable dose for at least 12 weeks (or statin contraindicated, or withdrawn for clinically important adverse events).</li>
+      <li><b>LDL-C 1.0–2.6 mmol/L</b> (or non-HDL-C 1.5–3.5 mmol/L if LDL cannot be measured).</li>
+      <li><b>Fasting TG 1.7–5.6 mmol/L.</b></li>
+      <li>In conjunction with <b>diet and exercise</b>.</li>
+    </ul>
+    <p>Diabetes with risk factors but no established ASCVD is within the TGA indication but not the PBS criteria.</p>
+  </details>
+
+  <details>
+    <summary>Practise with a particular doctor or level</summary>
+    <div class="pick" id="pick"></div>
+    <div class="pick" id="pickLevel"></div>
+  </details>
+
+  <p class="other">Also try the <a href="../">Quellara demo scenario</a>.</p>
+  <p class="note">For internal sales training only. Doctors are fictional. Product facts are summarised from CSL Seqirus approved materials; review the full Product Information before prescribing. Calls are processed by ElevenLabs for training only.</p>
+</main>
+
+<script>
+  // Vazkepa agent IDs from the REESTV ElevenLabs workspace. Persona type is deliberately not shown to the rep.
+  const DOCTORS = {
+    doyle: {
+      agent: "agent_0301m50sjxxkeqh9275c20f6dz7e",
+      name: "Dr Karen Doyle",
+      where: "GP, bulk-billing practice in Sunbury",
+      time: "About 5 minutes"
+    },
+    nguyen: {
+      agent: "agent_8301m50sjt7dfvc9xvfpj9q0y42c",
+      name: "Dr Tom Nguyen",
+      where: "GP, family practice in Footscray",
+      time: "About 5 minutes"
+    },
+    collins: {
+      agent: "agent_1101m50sjpnde00s5hc92t430c1s",
+      name: "Dr Andrew Collins",
+      where: "GP running a chronic disease clinic, Geelong",
+      time: "About 8 minutes"
+    }
+  };
+  // Adoption ladder: where this doctor is with Vazkepa. The level name is passed to the agent as a dynamic variable.
+  const LEVELS = {
+    1: { name: "Awareness", note: "Knows the name but has never prescribed it", objective: "Raise awareness of residual CV risk beyond LDL-C and link Vazkepa to their patients. Aim for them to name a type of eligible patient." },
+    2: { name: "Consideration", note: "Knows it is PBS-listed but has not initiated", objective: "Find and resolve their main concern. Aim for agreement to check one specific patient against the PBS criteria and initiate." },
+    3: { name: "Trial", note: "Has initiated it in one or two patients", objective: "Follow up their experience and check patient selection against the PBS criteria. Aim for initiation in more eligible patients." },
+    4: { name: "Adoption", note: "Regularly initiates in post-MI patients", objective: "Reinforce appropriate use and explore another eligible ASCVD group, such as prior ischaemic stroke or peripheral arterial disease." }
+  };
+  const KEYS = Object.keys(DOCTORS);
+  const LAST = "simclinic-vazkepa-last-doctor";
+
+  function readLast() { try { return localStorage.getItem(LAST); } catch (e) { return null; } }
+  function saveLast(k) { try { localStorage.setItem(LAST, k); } catch (e) {} }
+
+  function choose() {
+    const asked = new URLSearchParams(location.search).get("d");
+    if (asked && DOCTORS[asked]) return asked;
+    const last = readLast();
+    const pool = KEYS.filter(k => k !== last);
+    return pool[Math.floor(Math.random() * pool.length)];
+  }
+
+  const key = choose();
+  const doc = DOCTORS[key];
+  saveLast(key);
+  const askedLevel = new URLSearchParams(location.search).get("l");
+  const levelNo = LEVELS[askedLevel] ? Number(askedLevel) : 1 + Math.floor(Math.random() * 4);
+  const level = LEVELS[levelNo];
+
+  document.getElementById("name").textContent = doc.name;
+  document.getElementById("where").textContent = doc.where;
+  document.getElementById("time").textContent = doc.time;
+  document.getElementById("level").textContent = levelNo + ". " + level.name + ": " + level.note.toLowerCase();
+  document.getElementById("objective").textContent = level.objective;
+  document.title = "Sim Clinic Vazkepa: " + doc.name;
+
+  const widget = document.createElement("elevenlabs-convai");
+  widget.setAttribute("agent-id", doc.agent);
+  widget.setAttribute("dynamic-variables", JSON.stringify({ adoption_level: level.name }));
+  document.body.appendChild(widget);
+
+  const pick = document.getElementById("pick");
+  KEYS.forEach(k => {
+    const a = document.createElement("a");
+    a.href = "?d=" + k + "&l=" + levelNo;
+    a.textContent = DOCTORS[k].name;
+    pick.appendChild(a);
+  });
+
+  const pickLevel = document.getElementById("pickLevel");
+  Object.keys(LEVELS).forEach(n => {
+    const a = document.createElement("a");
+    a.href = "?d=" + key + "&l=" + n;
+    a.textContent = n + ". " + LEVELS[n].name;
+    pickLevel.appendChild(a);
+  });
+
+  document.getElementById("next").addEventListener("click", () => {
+    location.href = location.pathname; // new random doctor and level; never the same doctor twice in a row
+  });
+</script>
+<script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
+</body>
+</html>
