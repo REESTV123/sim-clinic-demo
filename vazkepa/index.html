@@ -25,7 +25,7 @@
   .by { color: var(--muted); font-size: 14px; }
   .by strong { color: var(--red); font-weight: 700; letter-spacing: .04em; }
   h1 { font: 400 16px/1.4 "DM Sans", sans-serif; color: var(--muted); margin: 0 0 12px; }
-  .slip { background: var(--panel); border-left: 4px solid var(--red); padding: 28px 28px 24px; }
+  .slip { margin-bottom: 36px; background: var(--panel); border-left: 4px solid var(--red); padding: 28px 28px 24px; }
   .doctor { font-family: "DM Serif Display", Georgia, serif; font-size: clamp(34px, 8vw, 46px); line-height: 1.05; margin: 0 0 6px; }
   .where { color: var(--muted); margin: 0 0 24px; }
   dl { margin: 0; display: grid; grid-template-columns: 9.5em 1fr; gap: 10px 16px; border-top: 1px solid var(--line); padding-top: 20px; }
@@ -48,15 +48,14 @@
   details h3 { font: 500 15px "DM Sans", sans-serif; color: var(--text); margin: 16px 0 4px; }
   .pick { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
   .pick a { font-size: 14px; padding: 8px 12px; }
-  .ladder { margin: 0 0 24px; }
-  .setup { margin: 0 0 36px; }
-  .ladder h2 { font: 400 16px/1.4 "DM Sans", sans-serif; color: var(--muted); margin: 0; }
   .pick a[aria-current="true"] { background: var(--panel); border-color: var(--red); }
   .note { color: var(--muted); font-size: 13px; margin-top: 32px; }
   .products { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin: 0 0 32px; border: 1px solid var(--line); }
   .products a { display: block; padding: 14px 16px; color: var(--muted); text-decoration: none; border-bottom: 3px solid transparent; }
   .products a b { display: block; font-family: "DM Serif Display", Georgia, serif; font-weight: 400; font-size: 24px; color: var(--text); line-height: 1.1; }
   .products a span { font-size: 13px; }
+  .products a:not([aria-current]) { opacity: .6; }
+  .products a:not([aria-current]):hover { opacity: 1; }
   .products a[aria-current="page"] { background: var(--panel); border-bottom-color: var(--red); }
   .products a:hover b { text-decoration: underline; }
 </style>
@@ -71,17 +70,6 @@
     <a href="../vazkepa/" aria-current="page"><b>Vazkepa</b><span>icosapent ethyl</span></a>
     <a href="../neffy/"><b>neffy</b><span>adrenaline nasal spray</span></a>
   </nav>
-
-  <div class="setup">
-    <section class="ladder" aria-labelledby="doctorTitle">
-      <h2 id="doctorTitle">Choose a doctor</h2>
-      <div class="pick" id="pick"></div>
-    </section>
-    <section class="ladder" aria-labelledby="ladderTitle">
-      <h2 id="ladderTitle">Choose where the doctor is on the adoption ladder</h2>
-      <div class="pick" id="pickLevel"></div>
-    </section>
-  </div>
 
   <h1>Your next appointment</h1>
   <section class="slip" aria-live="polite">
@@ -142,6 +130,14 @@
     <p>Diabetes with risk factors but no established ASCVD is within the TGA indication but not the PBS criteria.</p>
   </details>
 
+  <details>
+    <summary>Practise with a particular doctor or level</summary>
+    <h3>Doctor</h3>
+    <div class="pick" id="pick"></div>
+    <h3>Adoption ladder</h3>
+    <div class="pick" id="pickLevel"></div>
+  </details>
+
   <p class="note">For internal sales training only. Doctors are fictional. Product facts are summarised from CSL Seqirus approved materials; review the full Product Information before prescribing. Calls are processed by ElevenLabs for training only.</p>
 </main>
 
@@ -198,7 +194,7 @@
   document.getElementById("name").textContent = doc.name;
   document.getElementById("where").textContent = doc.where;
   document.getElementById("time").textContent = doc.time;
-  document.getElementById("level").textContent = levelNo + ". " + level.name + ": " + level.note.toLowerCase();
+  document.getElementById("level").textContent = levelNo + ". " + level.name + ": " + level.note.charAt(0).toLowerCase() + level.note.slice(1);
   document.getElementById("objective").textContent = level.objective;
   document.title = "Sim Clinic Vazkepa: " + doc.name;
 
