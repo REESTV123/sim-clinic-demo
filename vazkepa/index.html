@@ -61,6 +61,10 @@
   .products a:not([aria-current]):hover { opacity: 1; }
   .products a[aria-current="page"] { background: var(--panel); border-bottom-color: var(--red); }
   .products a:hover b { text-decoration: underline; }
+  .review { margin-top: 32px; padding: 18px 20px; background: var(--panel); border-left: 4px solid var(--red); }
+  .review a { color: var(--text); font-weight: 500; }
+  .review a:hover { color: var(--red); }
+  .review span { display: block; color: var(--muted); font-size: 14px; margin-top: 4px; }
 </style>
 </head>
 <body>
@@ -143,6 +147,8 @@
     </ul>
     <p>Diabetes with risk factors but no established ASCVD is within the TGA indication but not the PBS criteria.</p>
   </details>
+
+  <p class="review"><a href="https://docs.google.com/spreadsheets/d/1rNRHT2tSuiGS_pLlARQq21eYsNMQr500suTOGVCfKLo/edit?usp=sharing" target="_blank" rel="noopener">Review call results &#8599;</a><span>Opens the call log in Google Sheets. A call appears there a few minutes after it ends.</span></p>
 
   <p class="note">For internal sales training only. Doctors are fictional. Product facts are summarised from CSL Seqirus approved materials; review the full Product Information before prescribing. Calls are processed by ElevenLabs for training only.</p>
 </main>
