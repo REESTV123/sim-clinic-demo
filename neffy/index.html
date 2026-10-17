@@ -48,6 +48,9 @@
   details h3 { font: 500 15px "DM Sans", sans-serif; color: var(--text); margin: 16px 0 4px; }
   .pick { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
   .pick a { font-size: 14px; padding: 8px 12px; }
+  .setup { margin: 0 0 36px; }
+  .ladder { margin: 0 0 24px; }
+  .ladder h2 { font: 400 16px/1.4 "DM Sans", sans-serif; color: var(--muted); margin: 0; }
   .pick a[aria-current="true"] { background: var(--panel); border-color: var(--red); }
   .note { color: var(--muted); font-size: 13px; margin-top: 32px; }
   .products { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin: 0 0 32px; border: 1px solid var(--line); }
@@ -70,6 +73,17 @@
     <a href="../vazkepa/"><b>Vazkepa</b><span>icosapent ethyl</span></a>
     <a href="../neffy/" aria-current="page"><b>neffy</b><span>adrenaline nasal spray</span></a>
   </nav>
+
+  <div class="setup">
+    <section class="ladder" aria-labelledby="doctorTitle">
+      <h2 id="doctorTitle">Choose a doctor</h2>
+      <div class="pick" id="pick"></div>
+    </section>
+    <section class="ladder" aria-labelledby="ladderTitle">
+      <h2 id="ladderTitle">Choose where the doctor is on the adoption ladder</h2>
+      <div class="pick" id="pickLevel"></div>
+    </section>
+  </div>
 
   <h1>Your next appointment</h1>
   <section class="slip" aria-live="polite">
@@ -133,14 +147,6 @@
       <li><b>Initial supply:</b> patients assessed to be at significant risk of anaphylaxis by, or in consultation with, a specified specialist, or discharged from hospital or ED after treatment with adrenaline for anaphylaxis.</li>
     </ul>
     <p>Check the full criteria at www.pbs.gov.au.</p>
-  </details>
-
-  <details>
-    <summary>Practise with a particular doctor or level</summary>
-    <h3>Doctor</h3>
-    <div class="pick" id="pick"></div>
-    <h3>Adoption ladder</h3>
-    <div class="pick" id="pickLevel"></div>
   </details>
 
   <p class="note">For internal sales training only. Doctors are fictional. Product facts are summarised from CSL Seqirus approved materials (AU-NEF-26-0138, AU-NEF-26-0060); review the full Product Information before prescribing. Calls are processed by ElevenLabs for training only.</p>
