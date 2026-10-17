@@ -173,8 +173,29 @@
   const LEVELS = {
     1: { name: "Awareness", note: "Knows the name but has never prescribed it", objective: "Raise awareness of residual CV risk beyond LDL-C and link Vazkepa to their patients. Aim for them to name a type of eligible patient." },
     2: { name: "Consideration", note: "Knows it is PBS-listed but has not initiated", objective: "Find and resolve their main concern. Aim for agreement to check one specific patient against the PBS criteria and initiate." },
-    3: { name: "Trial", note: "Has initiated it in one or two patients", objective: "Follow up their experience and check patient selection against the PBS criteria. Aim for initiation in more eligible patients." },
-    4: { name: "Adoption", note: "Regularly initiates in post-MI patients", objective: "Reinforce appropriate use and explore another eligible ASCVD group, such as prior ischaemic stroke or peripheral arterial disease." }
+    3: { name: "Trial", note: "Has started Vazkepa in one or two patients", objective: "Follow up their experience and check patient selection against the PBS criteria. Aim for initiation in more eligible patients." },
+    4: { name: "Adoption", note: "Regularly starts Vazkepa in post-MI patients", objective: "Reinforce appropriate use and explore another eligible ASCVD group, such as prior ischaemic stroke or peripheral arterial disease." }
+  };
+  // What each doctor says first, by adoption level, so the call opens in the right place.
+  const OPENINGS = {
+    doyle: {
+      1: "Come in, grab a seat. I've only got about five minutes before my next patient, so what have you got for me today?",
+      2: "Come in, grab a seat. Five minutes, sorry. Is this the omega-3 one the cardiologists keep mentioning?",
+      3: "Come in. Only five minutes. Good timing actually, I've started Vazkepa in a couple of patients since we last spoke.",
+      4: "Come in, grab a seat. I've only got about five minutes. I've got a fair few on Vazkepa now, so what's new?"
+    },
+    nguyen: {
+      1: "G'day, come on in. I've got a few minutes. What did you want to talk about?",
+      2: "G'day, come on in. One of my heart patients came back from the cardiologist on Vazkepa, so I'm curious. What did you want to talk about?",
+      3: "G'day, come on in. I've started a couple of patients on Vazkepa, so I've got a few thoughts for you.",
+      4: "G'day, come on in. Quite a few of my heart patients are on Vazkepa now, so it's good to catch up."
+    },
+    collins: {
+      1: "Come in. I've got a few minutes. I'll be upfront, I'm more interested in the data than the brochure, so what have you got?",
+      2: "Come in. I've got a few minutes. I've been reading up on REDUCE-IT and I've got questions, so let's get into it.",
+      3: "Come in. I've started a couple of post-MI patients on Vazkepa, but I'm not sure it's doing much for one of them. What have you got?",
+      4: "Come in. I've got a few minutes. I've got a good number of post-MI patients on Vazkepa now, so I'm interested in what else you can tell me."
+    }
   };
   const KEYS = Object.keys(DOCTORS);
   const LAST = "simclinic-vazkepa-last-doctor";
@@ -206,7 +227,7 @@
 
   const widget = document.createElement("elevenlabs-convai");
   widget.setAttribute("agent-id", doc.agent);
-  widget.setAttribute("dynamic-variables", JSON.stringify({ adoption_level: level.name }));
+  widget.setAttribute("dynamic-variables", JSON.stringify({ adoption_level: level.name, opening_line: OPENINGS[key][levelNo] }));
   document.body.appendChild(widget);
 
   const pick = document.getElementById("pick");
