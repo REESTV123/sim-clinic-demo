@@ -48,7 +48,8 @@
   details h3 { font: 500 15px "DM Sans", sans-serif; color: var(--text); margin: 16px 0 4px; }
   .pick { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
   .pick a { font-size: 14px; padding: 8px 12px; }
-  .ladder { margin: 28px 0 0; }
+  .ladder { margin: 0 0 24px; }
+  .setup { margin: 0 0 36px; }
   .ladder h2 { font: 400 16px/1.4 "DM Sans", sans-serif; color: var(--muted); margin: 0; }
   .pick a[aria-current="true"] { background: var(--panel); border-color: var(--red); }
   .note { color: var(--muted); font-size: 13px; margin-top: 32px; }
@@ -71,6 +72,17 @@
     <a href="../neffy/" aria-current="page"><b>neffy</b><span>adrenaline nasal spray</span></a>
   </nav>
 
+  <div class="setup">
+    <section class="ladder" aria-labelledby="doctorTitle">
+      <h2 id="doctorTitle">Choose a doctor</h2>
+      <div class="pick" id="pick"></div>
+    </section>
+    <section class="ladder" aria-labelledby="ladderTitle">
+      <h2 id="ladderTitle">Choose where the doctor is on the adoption ladder</h2>
+      <div class="pick" id="pickLevel"></div>
+    </section>
+  </div>
+
   <h1>Your next appointment</h1>
   <section class="slip" aria-live="polite">
     <p class="doctor" id="name">Loading…</p>
@@ -84,14 +96,6 @@
     <p class="start">When you're ready, tap the <b>call button</b> in the bottom corner and allow your microphone.</p>
   </section>
 
-  <section class="ladder" aria-labelledby="ladderTitle">
-    <h2 id="ladderTitle">Choose where the doctor is on the adoption ladder</h2>
-    <div class="pick" id="pickLevel"></div>
-  </section>
-
-  <div class="actions">
-    <button class="primary" id="next" type="button">Give me a different doctor</button>
-  </div>
 
   <details>
     <summary>neffy product card</summary>
@@ -141,11 +145,6 @@
       <li><b>Initial supply:</b> patients assessed to be at significant risk of anaphylaxis by, or in consultation with, a specified specialist, or discharged from hospital or ED after treatment with adrenaline for anaphylaxis.</li>
     </ul>
     <p>Check the full criteria at www.pbs.gov.au.</p>
-  </details>
-
-  <details>
-    <summary>Practise with a particular doctor</summary>
-    <div class="pick" id="pick"></div>
   </details>
 
   <p class="note">For internal sales training only. Doctors are fictional. Product facts are summarised from CSL Seqirus approved materials (AU-NEF-26-0138, AU-NEF-26-0060); review the full Product Information before prescribing. Calls are processed by ElevenLabs for training only.</p>
@@ -218,6 +217,7 @@
     const a = document.createElement("a");
     a.href = "?d=" + k + "&l=" + levelNo;
     a.textContent = DOCTORS[k].name;
+    if (k === key) a.setAttribute("aria-current", "true");
     pick.appendChild(a);
   });
 
@@ -228,10 +228,6 @@
     a.textContent = n + ". " + LEVELS[n].name;
     if (Number(n) === levelNo) a.setAttribute("aria-current", "true");
     pickLevel.appendChild(a);
-  });
-
-  document.getElementById("next").addEventListener("click", () => {
-    location.href = location.pathname + "?l=" + levelNo; // new random doctor, same level; never the same doctor twice in a row
   });
 </script>
 <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
