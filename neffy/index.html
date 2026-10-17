@@ -1,1 +1,231 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Sim Clinic: neffy practice call</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0a0a0f; --panel: #1c1c28; --line: #2e2e40;
+    --text: #f8f6f2; --muted: #9898a8; --red: #e01b24;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh; background: var(--ink); color: var(--text);
+    font: 400 17px/1.55 "DM Sans", system-ui, sans-serif;
+    display: flex; justify-content: center; padding: 48px 20px 120px;
+  }
+  main { width: 100%; max-width: 540px; }
+  header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 24px; }
+  .brand { font-family: "DM Serif Display", Georgia, serif; font-size: 28px; }
+  .by { color: var(--muted); font-size: 14px; }
+  .by strong { color: var(--red); font-weight: 700; letter-spacing: .04em; }
+  h1 { font: 400 16px/1.4 "DM Sans", sans-serif; color: var(--muted); margin: 0 0 12px; }
+  .slip { background: var(--panel); border-left: 4px solid var(--red); padding: 28px 28px 24px; }
+  .doctor { font-family: "DM Serif Display", Georgia, serif; font-size: clamp(34px, 8vw, 46px); line-height: 1.05; margin: 0 0 6px; }
+  .where { color: var(--muted); margin: 0 0 24px; }
+  dl { margin: 0; display: grid; grid-template-columns: 9.5em 1fr; gap: 10px 16px; border-top: 1px solid var(--line); padding-top: 20px; }
+  dt { color: var(--muted); }
+  dd { margin: 0; }
+  .start { margin: 24px 0 0; font-size: 15px; color: var(--text); }
+  .start b { color: var(--red); font-weight: 500; }
+  .actions { display: flex; flex-wrap: wrap; gap: 12px; margin: 28px 0 40px; }
+  button, .pick a {
+    font: 500 16px "DM Sans", sans-serif; cursor: pointer; text-decoration: none;
+    border: 1px solid var(--line); background: transparent; color: var(--text); padding: 12px 18px;
+  }
+  button.primary { background: var(--red); border-color: var(--red); }
+  button:hover, .pick a:hover { border-color: var(--text); }
+  button:focus-visible, a:focus-visible, summary:focus-visible { outline: 2px solid var(--text); outline-offset: 3px; }
+  details { border-top: 1px solid var(--line); padding: 16px 0; }
+  summary { cursor: pointer; font-weight: 500; }
+  details p, details li { color: var(--muted); font-size: 15px; }
+  details ul { padding-left: 20px; margin: 8px 0; }
+  details h3 { font: 500 15px "DM Sans", sans-serif; color: var(--text); margin: 16px 0 4px; }
+  .pick { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+  .pick a { font-size: 14px; padding: 8px 12px; }
+  .note { color: var(--muted); font-size: 13px; margin-top: 32px; }
+  .products { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin: 0 0 32px; border: 1px solid var(--line); }
+  .products a { display: block; padding: 14px 16px; color: var(--muted); text-decoration: none; border-bottom: 3px solid transparent; }
+  .products a b { display: block; font-family: "DM Serif Display", Georgia, serif; font-weight: 400; font-size: 24px; color: var(--text); line-height: 1.1; }
+  .products a span { font-size: 13px; }
+  .products a[aria-current="page"] { background: var(--panel); border-bottom-color: var(--red); }
+  .products a:hover b { text-decoration: underline; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <span class="brand">Sim Clinic</span>
+    <span class="by">by <strong>REESTV</strong></span>
+  </header>
+  <nav class="products" aria-label="Product">
+    <a href="../vazkepa/"><b>Vazkepa</b><span>icosapent ethyl</span></a>
+    <a href="../neffy/" aria-current="page"><b>neffy</b><span>adrenaline nasal spray</span></a>
+  </nav>
 
+  <h1>Your next appointment</h1>
+  <section class="slip" aria-live="polite">
+    <p class="doctor" id="name">Loading…</p>
+    <p class="where" id="where"></p>
+    <dl>
+      <dt>Time with you</dt><dd id="time"></dd>
+      <dt>Adoption ladder</dt><dd id="level"></dd>
+      <dt>Your objective</dt><dd id="objective"></dd>
+      <dt>Product</dt><dd>neffy (adrenaline) nasal spray 1 mg and 2 mg, CSL Seqirus</dd>
+    </dl>
+    <p class="start">When you're ready, tap the <b>call button</b> in the bottom corner and allow your microphone.</p>
+  </section>
+
+  <div class="actions">
+    <button class="primary" id="next" type="button">Give me a different doctor</button>
+  </div>
+
+  <details>
+    <summary>neffy product card</summary>
+    <p>Use only these facts in the call. Anything else is a Medical Information request (1800 642 865).</p>
+    <h3>Indication and dosing</h3>
+    <ul>
+      <li>Adrenaline nasal spray for emergency treatment of anaphylaxis in adults and children aged 4 years and older.</li>
+      <li>1 mg for patients 15 kg to &lt;30 kg; 2 mg for patients ≥30 kg. Pack of two single-dose sprays.</li>
+      <li>Prescribe with an anaphylaxis management plan, which includes an ASCIA Action Plan for Anaphylaxis.</li>
+    </ul>
+    <h3>Unmet need</h3>
+    <ul>
+      <li>Fewer than 50% of patients received adrenaline before hospital (Australian ED audit).</li>
+      <li>Barriers: not carrying the device, needle anxiety, hesitation and lack of confidence in the moment.</li>
+    </ul>
+    <h3>Efficacy</h3>
+    <ul>
+      <li>Recognised as being as effective as adrenaline auto-injectors (e.g. EpiPen) by the TGA, PBAC and ASCIA. All adrenaline devices approved in Australia work rapidly to treat anaphylaxis.</li>
+      <li>Rapid changes in HR and BP from 1 minute, comparable to 0.3 mg IM adrenaline and auto-injector. PD study in healthy volunteers; HR and BP are surrogate markers and their clinical meaning in anaphylaxis is unclear.</li>
+      <li>Effective absorption regardless of nasal congestion or allergic rhinitis.</li>
+      <li>Oral food challenge study: 100% of patients achieved symptom resolution after one dose; improvement started within 5 minutes.</li>
+    </ul>
+    <h3>Use</h3>
+    <ul>
+      <li>HOLD (do not test-spray), PLACE in the nostril without angling, PRESS the plunger firmly until it clicks.</li>
+      <li>Call an ambulance. If no improvement after 5 minutes, give a second dose with a new spray, ideally in the same nostril.</li>
+      <li>100% of trained adults administered it without error (n=42).</li>
+    </ul>
+    <h3>Safety and storage</h3>
+    <ul>
+      <li>Well tolerated; no serious adverse events in clinical trials. Most common: nasal discomfort and headache. No needle-related injuries.</li>
+      <li>Shelf life from manufacture: 1 mg 2 years, 2 mg 2.5 years. Store below 25°C; short excursions up to 50°C permitted.</li>
+      <li>Do not freeze. A frozen device will not work; thaw for at least one hour.</li>
+    </ul>
+    <h3>Compliance</h3>
+    <ul>
+      <li>Report any possible adverse event you hear about to CSL Seqirus, following company process.</li>
+      <li>No claims that neffy is faster, stronger or better than EpiPen or IM adrenaline. The approved word is comparable.</li>
+    </ul>
+  </details>
+
+  <details>
+    <summary>PBS eligibility</summary>
+    <p>PBS listed, Authority Required, for anticipated emergency treatment of anaphylaxis.</p>
+    <ul>
+      <li><b>Continuing supply:</b> GPs can prescribe to eligible patients previously prescribed an authority prescription for adrenaline.</li>
+      <li><b>Initial supply:</b> patients assessed to be at significant risk of anaphylaxis by, or in consultation with, a specified specialist, or discharged from hospital or ED after treatment with adrenaline for anaphylaxis.</li>
+    </ul>
+    <p>Check the full criteria at www.pbs.gov.au.</p>
+  </details>
+
+  <details>
+    <summary>Practise with a particular doctor or level</summary>
+    <div class="pick" id="pick"></div>
+    <div class="pick" id="pickLevel"></div>
+  </details>
+
+  <p class="note">For internal sales training only. Doctors are fictional. Product facts are summarised from CSL Seqirus approved materials (AU-NEF-26-0138, AU-NEF-26-0060); review the full Product Information before prescribing. Calls are processed by ElevenLabs for training only.</p>
+</main>
+
+<script>
+  // neffy agent IDs from the REESTV ElevenLabs workspace. Persona type is deliberately not shown to the rep.
+  const DOCTORS = {
+    doyle: {
+      agent: "agent_3201m548nwb3fn1sp4b3qewrgddt",
+      name: "Dr Karen Doyle",
+      where: "GP, bulk-billing practice in Sunbury",
+      time: "About 5 minutes"
+    },
+    nguyen: {
+      agent: "agent_4901m548nsykffjascjtwtyhxrnc",
+      name: "Dr Tom Nguyen",
+      where: "GP, family practice in Footscray",
+      time: "About 5 minutes"
+    },
+    collins: {
+      agent: "agent_5801m548nqbkfg8a579vy33wg34q",
+      name: "Dr Andrew Collins",
+      where: "GP who reads the journals closely, Geelong",
+      time: "About 8 minutes"
+    }
+  };
+  // Adoption ladder: where this doctor is with neffy. The level name is passed to the agent as a dynamic variable.
+  const LEVELS = {
+    1: { name: "Awareness", note: "Has heard of a nasal adrenaline spray but never prescribed it", objective: "Establish why adrenaline is underused and link neffy to their patients. Aim for them to name a type of patient it might suit." },
+    2: { name: "Consideration", note: "Knows it is PBS-listed but has not prescribed it", objective: "Find and resolve their main concern. Aim for agreement to offer neffy to one specific patient at their next adrenaline renewal." },
+    3: { name: "Trial", note: "Has switched one or two patients at renewal", objective: "Follow up their experience, check patient selection and handle any issues. Aim for offering it to more suitable patients." },
+    4: { name: "Adoption", note: "Offers it routinely at adrenaline renewal", objective: "Reinforce appropriate use and explore another suitable group within the indication, such as families with children of the right weight." }
+  };
+  const KEYS = Object.keys(DOCTORS);
+  const LAST = "simclinic-neffy-last-doctor";
+
+  function readLast() { try { return localStorage.getItem(LAST); } catch (e) { return null; } }
+  function saveLast(k) { try { localStorage.setItem(LAST, k); } catch (e) {} }
+
+  function choose() {
+    const asked = new URLSearchParams(location.search).get("d");
+    if (asked && DOCTORS[asked]) return asked;
+    const last = readLast();
+    const pool = KEYS.filter(k => k !== last);
+    return pool[Math.floor(Math.random() * pool.length)];
+  }
+
+  const key = choose();
+  const doc = DOCTORS[key];
+  saveLast(key);
+  const askedLevel = new URLSearchParams(location.search).get("l");
+  const levelNo = LEVELS[askedLevel] ? Number(askedLevel) : 1 + Math.floor(Math.random() * 4);
+  const level = LEVELS[levelNo];
+
+  document.getElementById("name").textContent = doc.name;
+  document.getElementById("where").textContent = doc.where;
+  document.getElementById("time").textContent = doc.time;
+  document.getElementById("level").textContent = levelNo + ". " + level.name + ": " + level.note.toLowerCase();
+  document.getElementById("objective").textContent = level.objective;
+  document.title = "Sim Clinic neffy: " + doc.name;
+
+  const widget = document.createElement("elevenlabs-convai");
+  widget.setAttribute("agent-id", doc.agent);
+  widget.setAttribute("dynamic-variables", JSON.stringify({ adoption_level: level.name }));
+  document.body.appendChild(widget);
+
+  const pick = document.getElementById("pick");
+  KEYS.forEach(k => {
+    const a = document.createElement("a");
+    a.href = "?d=" + k + "&l=" + levelNo;
+    a.textContent = DOCTORS[k].name;
+    pick.appendChild(a);
+  });
+
+  const pickLevel = document.getElementById("pickLevel");
+  Object.keys(LEVELS).forEach(n => {
+    const a = document.createElement("a");
+    a.href = "?d=" + key + "&l=" + n;
+    a.textContent = n + ". " + LEVELS[n].name;
+    pickLevel.appendChild(a);
+  });
+
+  document.getElementById("next").addEventListener("click", () => {
+    location.href = location.pathname; // new random doctor and level; never the same doctor twice in a row
+  });
+</script>
+<script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
+</body>
+</html>
