@@ -178,8 +178,29 @@
   const LEVELS = {
     1: { name: "Awareness", note: "Has heard of a nasal adrenaline spray but never prescribed it", objective: "Establish why adrenaline is underused and link neffy to their patients. Aim for them to name a type of patient it might suit." },
     2: { name: "Consideration", note: "Knows it is PBS-listed but has not prescribed it", objective: "Find and resolve their main concern. Aim for agreement to offer neffy to one specific patient at their next adrenaline renewal." },
-    3: { name: "Trial", note: "Has switched one or two patients at renewal", objective: "Follow up their experience, check patient selection and handle any issues. Aim for offering it to more suitable patients." },
-    4: { name: "Adoption", note: "Offers it routinely at adrenaline renewal", objective: "Reinforce appropriate use and explore another suitable group within the indication, such as families with children of the right weight." }
+    3: { name: "Trial", note: "Has switched one or two patients to neffy at renewal", objective: "Follow up their experience, check patient selection and handle any issues. Aim for offering it to more suitable patients." },
+    4: { name: "Adoption", note: "Offers neffy routinely at adrenaline renewal", objective: "Reinforce appropriate use and explore another suitable group within the indication, such as families with children of the right weight." }
+  };
+  // What each doctor says first, by adoption level, so the call opens in the right place.
+  const OPENINGS = {
+    doyle: {
+      1: "Come in, grab a seat. I've only got about five minutes before my next patient, so what have you got for me today?",
+      2: "Come in, grab a seat. I've only got about five minutes. Is this the nasal adrenaline one I keep seeing on allergist letters?",
+      3: "Come in. Only five minutes, sorry. Good timing actually, I've tried neffy on a couple of patients since we last spoke.",
+      4: "Come in, grab a seat. I've only got about five minutes. neffy's pretty standard at my renewals now, so what's new?"
+    },
+    nguyen: {
+      1: "G'day, come on in. I've got a few minutes. What did you want to talk about?",
+      2: "G'day, come on in. One of my patients came back from the allergist on neffy, so I'm curious. What did you want to talk about?",
+      3: "G'day, come on in. I've switched a couple of patients to neffy, so I've got a few thoughts for you.",
+      4: "G'day, come on in. Plenty of my families are on neffy now, so it's good to catch up."
+    },
+    collins: {
+      1: "Come in. I've got a few minutes. I'll be upfront, I'm more interested in the data than the brochure, so what have you got?",
+      2: "Come in. I've got a few minutes. I've been reading up on neffy and I've got questions about the data, so let's get into it.",
+      3: "Come in. I've put a couple of patients on neffy, but I'll be honest, I'm still not sure how far to trust it. What have you got?",
+      4: "Come in. I've got a few minutes. I'm offering neffy fairly routinely at renewals now, so I'm interested in what else you can tell me."
+    }
   };
   const KEYS = Object.keys(DOCTORS);
   const LAST = "simclinic-neffy-last-doctor";
@@ -211,7 +232,7 @@
 
   const widget = document.createElement("elevenlabs-convai");
   widget.setAttribute("agent-id", doc.agent);
-  widget.setAttribute("dynamic-variables", JSON.stringify({ adoption_level: level.name }));
+  widget.setAttribute("dynamic-variables", JSON.stringify({ adoption_level: level.name, opening_line: OPENINGS[key][levelNo] }));
   document.body.appendChild(widget);
 
   const pick = document.getElementById("pick");
