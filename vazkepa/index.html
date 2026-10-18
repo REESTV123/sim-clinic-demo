@@ -175,32 +175,36 @@
       time: "About 8 minutes"
     }
   };
-  // Adoption ladder: where this doctor is with Vazkepa. The level name is passed to the agent as a dynamic variable.
+  // Seqirus adoption ladder: where this doctor is with Vazkepa. The level name is passed to the agent as a dynamic variable.
   const LEVELS = {
-    1: { name: "Awareness", note: "Knows the name but has never prescribed it", objective: "Raise awareness of residual CV risk beyond LDL-C and link Vazkepa to their patients. Aim for them to name a type of eligible patient." },
-    2: { name: "Consideration", note: "Knows it is PBS-listed but has not initiated", objective: "Find and resolve their main concern. Aim for agreement to check one specific patient against the PBS criteria and initiate." },
-    3: { name: "Trial", note: "Has started Vazkepa in one or two patients", objective: "Follow up their experience and check patient selection against the PBS criteria. Aim for initiation in more eligible patients." },
-    4: { name: "Adoption", note: "Regularly starts Vazkepa in post-MI patients", objective: "Reinforce appropriate use and explore another eligible ASCVD group, such as prior ischaemic stroke or peripheral arterial disease." }
+    1: { name: "Non User", note: "Knows of Vazkepa but has never prescribed it", objective: "Uncover what is holding them back and link Vazkepa to their patients. Aim for agreement to check one specific patient against the PBS criteria and initiate." },
+    2: { name: "Trial User", note: "Has started Vazkepa in one or two patients", objective: "Follow up their experience and check patient selection against the PBS criteria. Aim for initiation in more eligible patients." },
+    3: { name: "User", note: "Prescribes Vazkepa for some patients, but not routinely", objective: "Find what stops it becoming routine. Aim for a consistent way to identify eligible post-MI patients." },
+    4: { name: "Loyal User", note: "Routinely starts Vazkepa in eligible post-MI patients", objective: "Reinforce appropriate use and explore another eligible ASCVD group, such as prior ischaemic stroke or peripheral arterial disease." },
+    5: { name: "Advocate", note: "Loyal user who talks positively about Vazkepa to colleagues", objective: "Maintain the relationship and keep to approved claims. Never ask them to promote Vazkepa to colleagues; if appropriate, offer a properly arranged educational meeting through CSL Seqirus." }
   };
   // What each doctor says first, by adoption level, so the call opens in the right place.
   const OPENINGS = {
     doyle: {
-      1: "Come in, grab a seat. I've only got about five minutes before my next patient, so what have you got for me today?",
-      2: "Come in, grab a seat. Five minutes, sorry. Is this the omega-3 one the cardiologists keep mentioning?",
-      3: "Come in. Only five minutes. Good timing actually, I've started Vazkepa in a couple of patients since we last spoke.",
-      4: "Come in, grab a seat. I've only got about five minutes. I've got a fair few on Vazkepa now, so what's new?"
+      1: "Come in, grab a seat. Five minutes, sorry. Is this the omega-3 one the cardiologists keep mentioning?",
+      2: "Come in. Only five minutes. Good timing actually, I've started Vazkepa in a couple of patients since we last spoke.",
+      3: "Come in, grab a seat. Five minutes. I've got a handful of patients on Vazkepa now, mostly when I remember at a script renewal.",
+      4: "Come in, grab a seat. I've only got about five minutes. I've got a fair few on Vazkepa now, so what's new?",
+      5: "Come in, grab a seat. Five minutes. Funny timing, a GP from down the road rang last week asking how we flag our Vazkepa patients."
     },
     nguyen: {
-      1: "G'day, come on in. I've got a few minutes. What did you want to talk about?",
-      2: "G'day, come on in. One of my heart patients came back from the cardiologist on Vazkepa, so I'm curious. What did you want to talk about?",
-      3: "G'day, come on in. I've started a couple of patients on Vazkepa, so I've got a few thoughts for you.",
-      4: "G'day, come on in. Quite a few of my heart patients are on Vazkepa now, so it's good to catch up."
+      1: "G'day, come on in. One of my heart patients came back from the cardiologist on Vazkepa, so I'm curious. What did you want to talk about?",
+      2: "G'day, come on in. I've started a couple of patients on Vazkepa, so I've got a few thoughts for you.",
+      3: "G'day, come on in. I've got a handful of heart patients on Vazkepa now, so it's good timing.",
+      4: "G'day, come on in. Quite a few of my heart patients are on Vazkepa now, so it's good to catch up.",
+      5: "G'day, come on in. Good to see you. The other GPs here keep asking me about Vazkepa since I've been using it so much."
     },
     collins: {
-      1: "Come in. I've got a few minutes. I'll be upfront, I'm more interested in the data than the brochure, so what have you got?",
-      2: "Come in. I've got a few minutes. I've been reading up on REDUCE-IT and I've got questions, so let's get into it.",
-      3: "Come in. I've started a couple of post-MI patients on Vazkepa, but I'm not sure it's doing much for one of them. What have you got?",
-      4: "Come in. I've got a few minutes. I've got a good number of post-MI patients on Vazkepa now, so I'm interested in what else you can tell me."
+      1: "Come in. I've got a few minutes. I've been reading up on REDUCE-IT and I've got questions, so let's get into it.",
+      2: "Come in. I've started a couple of post-MI patients on Vazkepa, but I'm not sure it's doing much for one of them. What have you got?",
+      3: "Come in. I've got a few minutes. I've put a handful of post-MI patients on Vazkepa, though I'll admit I'm not systematic about it.",
+      4: "Come in. I've got a few minutes. I've got a good number of post-MI patients on Vazkepa now, so I'm interested in what else you can tell me.",
+      5: "Come in. I've got a few minutes. I talked our registrars through how I use Vazkepa last week, so I've had a few questions thrown at me."
     }
   };
   const KEYS = Object.keys(DOCTORS);
@@ -221,7 +225,7 @@
   const doc = DOCTORS[key];
   saveLast(key);
   const askedLevel = new URLSearchParams(location.search).get("l");
-  const levelNo = LEVELS[askedLevel] ? Number(askedLevel) : 1 + Math.floor(Math.random() * 4);
+  const levelNo = LEVELS[askedLevel] ? Number(askedLevel) : 1 + Math.floor(Math.random() * 5);
   const level = LEVELS[levelNo];
 
   document.getElementById("name").textContent = doc.name;
