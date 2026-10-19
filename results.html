@@ -25,6 +25,12 @@
   a { color: var(--text); }
   h1 { font-size: 1.9rem; line-height: 1.2; margin: 0 0 4px; font-weight: 650; letter-spacing: -0.01em; }
   .sub { color: var(--muted); margin: 0 0 28px; }
+  .back {
+    display: inline-block; margin: 0 0 20px; color: var(--muted); text-decoration: none;
+    border: 1px solid var(--line); border-radius: 6px; padding: 7px 12px; font-size: 0.95rem;
+  }
+  .back::before { content: "‹ "; }
+  .back:hover { color: var(--text); border-color: var(--text); }
   button, input, select {
     font: inherit; color: var(--text); background: var(--surface);
     border: 1px solid var(--line); border-radius: 6px; padding: 9px 12px;
@@ -87,17 +93,11 @@
 </head>
 <body>
 <main>
+  <a class="back" href="./">Back to Sim Clinic</a>
   <h1>Call results</h1>
   <p class="sub">Every Sim Clinic practice call, scored against the product’s criteria.</p>
 
-  <section id="gate">
-    <label for="pass">Passcode</label>
-    <div class="row">
-      <input id="pass" type="password" autocomplete="current-password">
-      <button class="primary" id="go">Show results</button>
-    </div>
-    <div class="msg" id="gateMsg" role="alert"></div>
-  </section>
+  <p class="msg" id="gateMsg" role="alert">Loading…</p>
 
   <section id="results" hidden>
     <div class="tabs" role="tablist" id="tabs"></div>
@@ -114,9 +114,8 @@
 
 <script>
 // Paste your Worker address here after deploying it.
-const API_URL = 'https://sim-clinic-results.reestv.workers.dev;
+const API_URL = 'https://sim-clinic-results.YOUR-SUBDOMAIN.workers.dev';
 
-let passcode = '';
 let data = null;
 let activeTab = 0;
 
@@ -128,31 +127,20 @@ const el = (tag, cls, text) => {
   return n;
 };
 
-$('go').addEventListener('click', load);
-$('pass').addEventListener('keydown', (e) => { if (e.key === 'Enter') load(); });
 $('refresh').addEventListener('click', load);
 $('doctorFilter').addEventListener('change', renderList);
 
 async function load() {
-  if (!passcode) passcode = $('pass').value.trim();
-  if (!passcode) { $('gateMsg').textContent = 'Enter the passcode.'; return; }
-  $('gateMsg').textContent = 'Loading…';
   $('refresh').disabled = true;
   try {
-    const res = await fetch(API_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ passcode }),
-    });
+    const res = await fetch(API_URL, { cache: 'no-store' });
     const json = await res.json();
     if (!res.ok || json.error) throw new Error(json.error || 'The results didn’t load.');
     data = json;
-    $('gate').hidden = true;
+    $('gateMsg').textContent = '';
     $('results').hidden = false;
     renderTabs();
   } catch (err) {
-    passcode = '';
-    $('gate').hidden = false;
     $('results').hidden = true;
     $('gateMsg').textContent = err.message.includes('fetch')
       ? 'The results service couldn’t be reached. If you’re on a company network, it may be blocked.'
@@ -161,6 +149,8 @@ async function load() {
     $('refresh').disabled = false;
   }
 }
+
+load();
 
 // Work out which column is which from the header names and contents.
 function describe(tab) {
