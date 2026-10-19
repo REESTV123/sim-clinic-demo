@@ -65,6 +65,15 @@
   .review a { color: var(--text); font-weight: 500; }
   .review a:hover { color: var(--red); }
   .review span { display: block; color: var(--muted); font-size: 14px; margin-top: 4px; }
+  .email { margin: 0; }
+  .email label { display: block; color: var(--muted); margin-bottom: 8px; }
+  .email input {
+    width: 100%; font: 400 16px "DM Sans", sans-serif; color: var(--text);
+    background: var(--panel); border: 1px solid var(--line); padding: 12px 14px;
+  }
+  .email input:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
+  .email input:invalid:not(:placeholder-shown) { border-color: var(--red); }
+  .email small { display: block; color: var(--muted); font-size: 13px; margin-top: 6px; }
 </style>
 </head>
 <body>
@@ -86,6 +95,11 @@
     <section class="ladder" aria-labelledby="ladderTitle">
       <h2 id="ladderTitle">Choose where the doctor is on the adoption ladder</h2>
       <div class="pick" id="pickLevel"></div>
+    </section>
+    <section class="ladder email">
+      <label for="repEmail">Email me my results (optional)</label>
+      <input id="repEmail" type="email" autocomplete="email" placeholder="you@seqirus.com">
+      <small>Your results arrive a few minutes after the call ends. Your address is saved with your call results.</small>
     </section>
   </div>
 
@@ -148,7 +162,7 @@
     <p>Diabetes with risk factors but no established ASCVD is within the TGA indication but not the PBS criteria.</p>
   </details>
 
-  <p class="review"><a href="https://docs.google.com/spreadsheets/d/1rNRHT2tSuiGS_pLlARQq21eYsNMQr500suTOGVCfKLo/edit?usp=sharing" target="_blank" rel="noopener">Review call results &#8599;</a><span>Opens the call log in Google Sheets. A call appears there a few minutes after it ends.</span></p>
+  <p class="review"><a href="../results.html">Review call results</a><span>See every practice call and its score. A call appears a few minutes after it ends.</span></p>
 
   <p class="note">For internal sales training only. Doctors are fictional. Product facts are summarised from CSL Seqirus approved materials; review the full Product Information before prescribing. Calls are processed by ElevenLabs for training only.</p>
 </main>
@@ -237,7 +251,21 @@
 
   const widget = document.createElement("elevenlabs-convai");
   widget.setAttribute("agent-id", doc.agent);
-  widget.setAttribute("dynamic-variables", JSON.stringify({ adoption_level: level.name, opening_line: OPENINGS[key][levelNo] }));
+  // Optional rep email: remembered on this device and passed to the agent so the call log can email the results.
+  const EMAIL_KEY = "simclinic-rep-email";
+  const emailInput = document.getElementById("repEmail");
+  try { emailInput.value = localStorage.getItem(EMAIL_KEY) || ""; } catch (e) {}
+  function callVariables() {
+    const v = { adoption_level: level.name, opening_line: OPENINGS[key][levelNo] };
+    const email = emailInput.value.trim();
+    if (email && emailInput.checkValidity()) v.rep_email = email;
+    return v;
+  }
+  widget.setAttribute("dynamic-variables", JSON.stringify(callVariables()));
+  emailInput.addEventListener("input", () => {
+    widget.setAttribute("dynamic-variables", JSON.stringify(callVariables()));
+    try { localStorage.setItem(EMAIL_KEY, emailInput.value.trim()); } catch (e) {}
+  });
   document.body.appendChild(widget);
 
   const pick = document.getElementById("pick");
