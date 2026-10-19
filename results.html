@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sim Clinic · Call results</title>
+<style>
+  :root {
+    --bg: #13202a;
+    --surface: #1b2c38;
+    --line: #2b3f4d;
+    --text: #e6edf1;
+    --muted: #93a5b2;
+    --pass: #52c08e;
+    --miss: #e2735c;
+    --na: #4f6271;
+    --focus: #8fc7ff;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font: 16px/1.5 "Aptos", "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+  }
+  main { max-width: 980px; margin: 0 auto; padding: 32px 20px 64px; }
+  a { color: var(--text); }
+  h1 { font-size: 1.9rem; line-height: 1.2; margin: 0 0 4px; font-weight: 650; letter-spacing: -0.01em; }
+  .sub { color: var(--muted); margin: 0 0 28px; }
+  button, input, select {
+    font: inherit; color: var(--text); background: var(--surface);
+    border: 1px solid var(--line); border-radius: 6px; padding: 9px 12px;
+  }
+  button { cursor: pointer; font-weight: 600; }
+  button.primary { background: var(--text); color: var(--bg); border-color: var(--text); }
+  :focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+  #gate { max-width: 360px; }
+  #gate label { display: block; margin-bottom: 6px; }
+  #gate .row { display: flex; gap: 8px; }
+  #gate input { flex: 1; min-width: 0; }
+  .msg { color: var(--miss); min-height: 1.5em; margin-top: 10px; }
+
+  .tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--line); margin-bottom: 20px; flex-wrap: wrap; }
+  .tabs button {
+    background: none; border: none; border-bottom: 3px solid transparent; border-radius: 0;
+    color: var(--muted); padding: 10px 14px;
+  }
+  .tabs button[aria-selected="true"] { color: var(--text); border-bottom-color: var(--text); }
+
+  .bar { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  .totals { color: var(--muted); }
+  .totals strong { color: var(--text); font-size: 1.15rem; }
+  .controls { display: flex; gap: 8px; flex-wrap: wrap; }
+
+  .call { border-top: 1px solid var(--line); }
+  .call:last-child { border-bottom: 1px solid var(--line); }
+  .call summary {
+    list-style: none; cursor: pointer; padding: 14px 4px;
+    display: grid; grid-template-columns: 9.5rem 1fr auto auto; gap: 16px; align-items: center;
+  }
+  .call summary::-webkit-details-marker { display: none; }
+  .when { color: var(--muted); font-variant-numeric: tabular-nums; }
+  .who strong { display: block; }
+  .who span { color: var(--muted); font-size: 0.9rem; }
+  .score { font-weight: 700; font-variant-numeric: tabular-nums; min-width: 3.5rem; text-align: right; }
+
+  /* The criteria strip: one mark per criterion, in order */
+  .strip { display: flex; gap: 3px; }
+  .strip i { width: 10px; height: 22px; border-radius: 2px; background: var(--na); }
+  .strip i.yes { background: var(--pass); }
+  .strip i.no { background: var(--miss); }
+
+  .detail { padding: 4px 4px 22px; display: grid; gap: 20px; }
+  .crit { display: grid; grid-template-columns: 4.5rem 1fr; gap: 6px 12px; margin: 0; }
+  .crit dt { font-weight: 700; font-size: 0.9rem; }
+  .crit dt.yes { color: var(--pass); } .crit dt.no { color: var(--miss); } .crit dt.na { color: var(--muted); }
+  .crit dd { margin: 0; }
+  .field h3 { font-size: 0.95rem; margin: 0 0 4px; color: var(--muted); font-weight: 600; }
+  .field p { margin: 0; max-width: 72ch; white-space: pre-wrap; }
+  .empty { color: var(--muted); padding: 24px 0; }
+
+  @media (max-width: 640px) {
+    .call summary { grid-template-columns: 1fr auto; }
+    .when { grid-column: 1 / -1; }
+    .strip { grid-column: 1 / -1; order: 5; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <h1>Call results</h1>
+  <p class="sub">Every Sim Clinic practice call, scored against the product’s criteria.</p>
+
+  <section id="gate">
+    <label for="pass">Passcode</label>
+    <div class="row">
+      <input id="pass" type="password" autocomplete="current-password">
+      <button class="primary" id="go">Show results</button>
+    </div>
+    <div class="msg" id="gateMsg" role="alert"></div>
+  </section>
+
+  <section id="results" hidden>
+    <div class="tabs" role="tablist" id="tabs"></div>
+    <div class="bar">
+      <div class="totals" id="totals"></div>
+      <div class="controls">
+        <select id="doctorFilter" aria-label="Filter by doctor"></select>
+        <button id="refresh">Refresh</button>
+      </div>
+    </div>
+    <div id="list"></div>
+  </section>
+</main>
+
+<script>
+// Paste your Worker address here after deploying it.
+const API_URL = 'https://sim-clinic-results.YOUR-SUBDOMAIN.workers.dev';
+
+let passcode = '';
+let data = null;
+let activeTab = 0;
+
+const $ = (id) => document.getElementById(id);
+const el = (tag, cls, text) => {
+  const n = document.createElement(tag);
+  if (cls) n.className = cls;
+  if (text != null) n.textContent = text;
+  return n;
+};
+
+$('go').addEventListener('click', load);
+$('pass').addEventListener('keydown', (e) => { if (e.key === 'Enter') load(); });
+$('refresh').addEventListener('click', load);
+$('doctorFilter').addEventListener('change', renderList);
+
+async function load() {
+  if (!passcode) passcode = $('pass').value.trim();
+  if (!passcode) { $('gateMsg').textContent = 'Enter the passcode.'; return; }
+  $('gateMsg').textContent = 'Loading…';
+  $('refresh').disabled = true;
+  try {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ passcode }),
+    });
+    const json = await res.json();
+    if (!res.ok || json.error) throw new Error(json.error || 'The results didn’t load.');
+    data = json;
+    $('gate').hidden = true;
+    $('results').hidden = false;
+    renderTabs();
+  } catch (err) {
+    passcode = '';
+    $('gate').hidden = false;
+    $('results').hidden = true;
+    $('gateMsg').textContent = err.message.includes('fetch')
+      ? 'The results service couldn’t be reached. If you’re on a company network, it may be blocked.'
+      : err.message;
+  } finally {
+    $('refresh').disabled = false;
+  }
+}
+
+// Work out which column is which from the header names and contents.
+function describe(tab) {
+  const h = tab.headers.map((x) => x.toLowerCase());
+  const find = (re) => h.findIndex((x) => re.test(x));
+  const isVerdict = (v) => /^(yes|no|n\/?a|success|failure|unknown)$/i.test(v.trim());
+  const criteria = tab.headers.map((_, i) => i).filter((i) => {
+    const vals = tab.rows.map((r) => r[i] || '').filter((v) => v !== '');
+    return vals.length > 0 && vals.filter(isVerdict).length / vals.length > 0.8;
+  });
+  const when = find(/date|time/);
+  const doctor = find(/doctor/);
+  const level = find(/adoption|level|ladder/);
+  const score = find(/score/);
+  const hide = new Set([when, doctor, level, score, ...criteria]);
+  h.forEach((x, i) => { if (/conversation|call id|^id$/.test(x)) hide.add(i); });
+  const text = tab.headers.map((_, i) => i).filter((i) => !hide.has(i));
+  return { when, doctor, level, score, criteria, text };
+}
+
+function verdictClass(v) {
+  const t = (v || '').trim().toLowerCase();
+  if (t === 'yes' || t === 'success') return 'yes';
+  if (t === 'no' || t === 'failure') return 'no';
+  return 'na';
+}
+
+function renderTabs() {
+  const tabs = $('tabs');
+  tabs.replaceChildren();
+  if (activeTab >= data.tabs.length) activeTab = 0;
+  data.tabs.forEach((t, i) => {
+    const b = el('button', '', t.name);
+    b.setAttribute('role', 'tab');
+    b.setAttribute('aria-selected', i === activeTab ? 'true' : 'false');
+    b.addEventListener('click', () => { activeTab = i; renderTabs(); });
+    tabs.append(b);
+  });
+  const tab = data.tabs[activeTab];
+  const cols = describe(tab);
+  const sel = $('doctorFilter');
+  const prev = sel.value;
+  sel.replaceChildren(new Option('All doctors', ''));
+  if (cols.doctor >= 0) {
+    [...new Set(tab.rows.map((r) => r[cols.doctor]).filter(Boolean))].sort()
+      .forEach((d) => sel.append(new Option(d, d)));
+  }
+  sel.value = [...sel.options].some((o) => o.value === prev) ? prev : '';
+  sel.hidden = cols.doctor < 0;
+  renderList();
+}
+
+function renderList() {
+  const tab = data.tabs[activeTab];
+  const cols = describe(tab);
+  const doc = $('doctorFilter').value;
+  const rows = tab.rows
+    .filter((r) => !doc || r[cols.doctor] === doc)
+    .slice().reverse(); // newest first
+
+  // Totals
+  const pct = rows.map((r) => {
+    const m = cols.score >= 0 && String(r[cols.score]).match(/(\d+(?:\.\d+)?)\s*\/\s*(\d+(?:\.\d+)?)/);
+    return m && +m[2] > 0 ? +m[1] / +m[2] : null;
+  }).filter((x) => x != null);
+  const totals = $('totals');
+  totals.replaceChildren();
+  const n = el('strong', '', String(rows.length));
+  totals.append(n, ` call${rows.length === 1 ? '' : 's'}`);
+  if (pct.length) {
+    const avg = Math.round((pct.reduce((a, b) => a + b, 0) / pct.length) * 100);
+    totals.append(', average score ', el('strong', '', avg + '%'));
+  }
+
+  const list = $('list');
+  list.replaceChildren();
+  if (!rows.length) {
+    list.append(el('p', 'empty', 'No calls logged yet. Results appear here a minute or two after a practice call ends.'));
+    return;
+  }
+
+  rows.forEach((r) => {
+    const d = el('details', 'call');
+    const s = el('summary');
+    s.append(el('span', 'when', cols.when >= 0 ? r[cols.when] : ''));
+    const who = el('span', 'who');
+    who.append(el('strong', '', cols.doctor >= 0 ? r[cols.doctor] : tab.name));
+    if (cols.level >= 0 && r[cols.level]) who.append(el('span', '', r[cols.level]));
+    s.append(who);
+    const strip = el('span', 'strip');
+    strip.setAttribute('aria-hidden', 'true');
+    cols.criteria.forEach((i) => strip.append(el('i', verdictClass(r[i]))));
+    s.append(strip);
+    s.append(el('span', 'score', cols.score >= 0 ? r[cols.score] : ''));
+    d.append(s);
+
+    const body = el('div', 'detail');
+    if (cols.criteria.length) {
+      const dl = el('dl', 'crit');
+      cols.criteria.forEach((i) => {
+        const v = r[i] || 'N/A';
+        dl.append(el('dt', verdictClass(v), v), el('dd', '', tab.headers[i]));
+      });
+      body.append(dl);
+    }
+    cols.text.forEach((i) => {
+      if (!r[i]) return;
+      const f = el('div', 'field');
+      f.append(el('h3', '', tab.headers[i]), el('p', '', r[i]));
+      body.append(f);
+    });
+    d.append(body);
+    list.append(d);
+  });
+}
+</script>
+</body>
+</html>
