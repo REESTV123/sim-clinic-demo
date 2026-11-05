@@ -4,83 +4,18 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>Sim Clinic: Vazkepa practice call</title>
+<title>CallReady: Vazkepa practice call</title>
+<link rel="icon" href="../reestv-logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --ink: #0a0a0f; --panel: #1c1c28; --line: #2e2e40;
-    --text: #f8f6f2; --muted: #9898a8; --red: #e01b24;
-  }
-  * { box-sizing: border-box; }
-  body {
-    margin: 0; min-height: 100vh; background: var(--ink); color: var(--text);
-    font: 400 17px/1.55 "DM Sans", system-ui, sans-serif;
-    display: flex; justify-content: center; padding: 48px 20px 120px;
-  }
-  main { width: 100%; max-width: 540px; }
-  header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 24px; }
-  .brand { font-family: "DM Serif Display", Georgia, serif; font-size: 28px; }
-  .by { color: var(--muted); font-size: 14px; }
-  .by strong { color: var(--red); font-weight: 700; letter-spacing: .04em; }
-  h1 { font: 400 16px/1.4 "DM Sans", sans-serif; color: var(--muted); margin: 0 0 12px; }
-  .slip { margin-bottom: 36px; background: var(--panel); border-left: 4px solid var(--red); padding: 28px 28px 24px; }
-  .doctor { font-family: "DM Serif Display", Georgia, serif; font-size: clamp(34px, 8vw, 46px); line-height: 1.05; margin: 0 0 6px; }
-  .where { color: var(--muted); margin: 0 0 24px; }
-  dl { margin: 0; display: grid; grid-template-columns: 9.5em 1fr; gap: 10px 16px; border-top: 1px solid var(--line); padding-top: 20px; }
-  dt { color: var(--muted); }
-  dd { margin: 0; }
-  .start { margin: 24px 0 0; font-size: 15px; color: var(--text); }
-  .start b { color: var(--red); font-weight: 500; }
-  .actions { display: flex; flex-wrap: wrap; gap: 12px; margin: 28px 0 40px; }
-  button, .pick a {
-    font: 500 16px "DM Sans", sans-serif; cursor: pointer; text-decoration: none;
-    border: 1px solid var(--line); background: transparent; color: var(--text); padding: 12px 18px;
-  }
-  button.primary { background: var(--red); border-color: var(--red); }
-  button:hover, .pick a:hover { border-color: var(--text); }
-  button:focus-visible, a:focus-visible, summary:focus-visible { outline: 2px solid var(--text); outline-offset: 3px; }
-  details { border-top: 1px solid var(--line); padding: 16px 0; }
-  summary { cursor: pointer; font-weight: 500; }
-  details p, details li { color: var(--muted); font-size: 15px; }
-  details ul { padding-left: 20px; margin: 8px 0; }
-  details h3 { font: 500 15px "DM Sans", sans-serif; color: var(--text); margin: 16px 0 4px; }
-  .pick { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
-  .pick a { font-size: 14px; padding: 8px 12px; }
-  .setup { margin: 0 0 36px; }
-  .ladder { margin: 0 0 24px; }
-  .ladder h2 { font: 400 16px/1.4 "DM Sans", sans-serif; color: var(--muted); margin: 0; }
-  .pick a[aria-current="true"] { background: var(--panel); border-color: var(--red); }
-  .note { color: var(--muted); font-size: 13px; margin-top: 32px; }
-  .products { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin: 0 0 32px; border: 1px solid var(--line); }
-  .products a { display: block; padding: 14px 16px; color: var(--muted); text-decoration: none; border-bottom: 3px solid transparent; }
-  .products a b { display: block; font-family: "DM Serif Display", Georgia, serif; font-weight: 400; font-size: 24px; color: var(--text); line-height: 1.1; }
-  .products a span { font-size: 13px; }
-  .products a:not([aria-current]) { opacity: .6; }
-  .products a:not([aria-current]):hover { opacity: 1; }
-  .products a[aria-current="page"] { background: var(--panel); border-bottom-color: var(--red); }
-  .products a:hover b { text-decoration: underline; }
-  .review { margin-top: 32px; padding: 18px 20px; background: var(--panel); border-left: 4px solid var(--red); }
-  .review a { color: var(--text); font-weight: 500; }
-  .review a:hover { color: var(--red); }
-  .review span { display: block; color: var(--muted); font-size: 14px; margin-top: 4px; }
-  .email { margin: 0; }
-  .email label { display: block; color: var(--muted); margin-bottom: 8px; }
-  .email input {
-    width: 100%; font: 400 16px "DM Sans", sans-serif; color: var(--text);
-    background: var(--panel); border: 1px solid var(--line); padding: 12px 14px;
-  }
-  .email input:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
-  .email input:invalid:not(:placeholder-shown) { border-color: var(--red); }
-  .email small { display: block; color: var(--muted); font-size: 13px; margin-top: 6px; }
-</style>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../callready.css">
 </head>
 <body>
 <main>
-  <header>
-    <span class="brand">Sim Clinic</span>
-    <span class="by">by <strong>REESTV</strong></span>
+  <header class="top">
+    <a class="wordmark" href="../">Call<span class="ready">Ready</span></a>
+    <span class="by"><span>by</span><img src="../reestv-logo.png" alt="REESTV" width="58" height="36"></span>
   </header>
   <nav class="products" aria-label="Product">
     <a href="../vazkepa/" aria-current="page"><b>Vazkepa</b><span>icosapent ethyl</span></a>
@@ -103,8 +38,8 @@
     </section>
   </div>
 
-  <h1>Your next appointment</h1>
-  <section class="slip" aria-live="polite">
+  <h1 class="label">Your next appointment</h1>
+  <section class="slip card" aria-live="polite">
     <p class="doctor" id="name">Loading…</p>
     <p class="where" id="where"></p>
     <dl>
@@ -162,9 +97,12 @@
     <p>Diabetes with risk factors but no established ASCVD is within the TGA indication but not the PBS criteria.</p>
   </details>
 
-  <p class="review"><a href="../results.html">Review call results</a><span>See every practice call and its score. A call appears a few minutes after it ends.</span></p>
+  <a class="review card" href="../results.html"><b>Review call results</b><span>See every practice call and its score. A call appears a few minutes after it ends.</span></a>
 
-  <p class="note">For internal sales training only. Doctors are fictional. Product facts are summarised from CSL Seqirus approved materials; review the full Product Information before prescribing. Calls are processed by ElevenLabs for training only.</p>
+  <footer class="foot">
+    <p>For internal sales training only. Doctors are fictional. Product facts are summarised from CSL Seqirus approved materials; review the full Product Information before prescribing. Calls are processed by ElevenLabs for training only.</p>
+    <p>CallReady is built by REESTV · <a href="https://www.callready.com.au">www.callready.com.au</a></p>
+  </footer>
 </main>
 
 <script>
@@ -222,6 +160,7 @@
     }
   };
   const KEYS = Object.keys(DOCTORS);
+  // Storage keys keep their original names so reps' saved choices carry over.
   const LAST = "simclinic-vazkepa-last-doctor";
 
   function readLast() { try { return localStorage.getItem(LAST); } catch (e) { return null; } }
@@ -247,7 +186,7 @@
   document.getElementById("time").textContent = doc.time;
   document.getElementById("level").textContent = levelNo + ". " + level.name + ": " + level.note.charAt(0).toLowerCase() + level.note.slice(1);
   document.getElementById("objective").textContent = level.objective;
-  document.title = "Sim Clinic Vazkepa: " + doc.name;
+  document.title = "CallReady Vazkepa: " + doc.name;
 
   const widget = document.createElement("elevenlabs-convai");
   widget.setAttribute("agent-id", doc.agent);
