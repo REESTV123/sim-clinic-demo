@@ -4,71 +4,42 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>Sim Clinic: choose a product</title>
+<title>CallReady: choose a product</title>
+<link rel="icon" href="reestv-logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --ink: #0a0a0f; --panel: #1c1c28; --line: #2e2e40;
-    --text: #f8f6f2; --muted: #9898a8; --red: #e01b24;
-  }
-  * { box-sizing: border-box; }
-  body {
-    margin: 0; min-height: 100vh; background: var(--ink); color: var(--text);
-    font: 400 17px/1.55 "DM Sans", system-ui, sans-serif;
-    display: flex; justify-content: center; padding: 48px 20px 80px;
-  }
-  main { width: 100%; max-width: 720px; }
-  header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 40px; }
-  .brand { font-family: "DM Serif Display", Georgia, serif; font-size: 28px; }
-  .by { color: var(--muted); font-size: 14px; }
-  .by strong { color: var(--red); font-weight: 700; letter-spacing: .04em; }
-  h1 { font: 400 16px/1.4 "DM Sans", sans-serif; color: var(--muted); margin: 0 0 16px; }
-  .products { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
-  .product {
-    display: flex; flex-direction: column; background: var(--panel); border-left: 4px solid var(--red);
-    padding: 28px 28px 24px; color: var(--text); text-decoration: none;
-  }
-  .product .name { font-family: "DM Serif Display", Georgia, serif; font-size: clamp(40px, 9vw, 56px); line-height: 1; margin: 0 0 6px; }
-  .product .generic { color: var(--muted); margin: 0 0 20px; }
-  .product .about { margin: 0 0 24px; font-size: 15px; flex: 1; }
-  .product .go { align-self: flex-start; background: var(--red); padding: 12px 18px; font-weight: 500; }
-  .product:hover .go { outline: 1px solid var(--text); }
-  .product:focus-visible { outline: 2px solid var(--text); outline-offset: 3px; }
-  .note { color: var(--muted); font-size: 13px; margin-top: 32px; }
-  .review { margin-top: 32px; padding: 18px 20px; background: var(--panel); border-left: 4px solid var(--red); }
-  .review a { color: var(--text); font-weight: 500; }
-  .review a:hover { color: var(--red); }
-  .review span { display: block; color: var(--muted); font-size: 14px; margin-top: 4px; }
-</style>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="callready.css">
 </head>
 <body>
-<main>
-  <header>
-    <span class="brand">Sim Clinic</span>
-    <span class="by">by <strong>REESTV</strong></span>
+<main class="wide">
+  <header class="top">
+    <a class="wordmark" href="./">Call<span class="ready">Ready</span></a>
+    <span class="by"><span>by</span><img src="reestv-logo.png" alt="REESTV" width="58" height="36"></span>
   </header>
 
-  <h1>Choose the product you want to practise</h1>
-  <div class="products">
-    <a class="product" href="vazkepa/">
+  <h1 class="label">Choose the product you want to practise</h1>
+  <div class="product-grid">
+    <a class="product card" href="vazkepa/">
       <p class="name">Vazkepa</p>
       <p class="generic">icosapent ethyl, CSL Seqirus</p>
       <p class="about">Talk to a GP about reducing CV risk in statin-treated patients and checking PBS eligibility.</p>
-      <span class="go">Practise Vazkepa</span>
+      <span class="btn">Practise Vazkepa</span>
     </a>
-    <a class="product" href="neffy/">
+    <a class="product card" href="neffy/">
       <p class="name">neffy</p>
       <p class="generic">adrenaline nasal spray, CSL Seqirus</p>
       <p class="about">Talk to a GP about offering a needle-free adrenaline option to patients at risk of anaphylaxis.</p>
-      <span class="go">Practise neffy</span>
+      <span class="btn">Practise neffy</span>
     </a>
   </div>
 
-  <p class="review"><a href="results.html">Review call results</a><span>See every practice call and its score. A call appears a few minutes after it ends.</span></p>
+  <a class="review card" href="results.html"><b>Review call results</b><span>See every practice call and its score. A call appears a few minutes after it ends.</span></a>
 
-  <p class="note">For internal sales training only. Doctors are fictional. Calls are processed by ElevenLabs for training only.</p>
+  <footer class="foot">
+    <p>For internal sales training only. Doctors are fictional. Calls are processed by ElevenLabs for training only.</p>
+    <p>CallReady is built by REESTV · <a href="https://www.callready.com.au">www.callready.com.au</a></p>
+  </footer>
 </main>
 </body>
 </html>

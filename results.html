@@ -3,99 +3,86 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Sim Clinic · Call results</title>
+<meta name="robots" content="noindex, nofollow">
+<title>CallReady · Call results</title>
+<link rel="icon" href="reestv-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="callready.css">
 <style>
-  :root {
-    --bg: #13202a;
-    --surface: #1b2c38;
-    --line: #2b3f4d;
-    --text: #e6edf1;
-    --muted: #93a5b2;
-    --pass: #52c08e;
-    --miss: #e2735c;
-    --na: #4f6271;
-    --focus: #8fc7ff;
-  }
-  * { box-sizing: border-box; }
-  body {
-    margin: 0; background: var(--bg); color: var(--text);
-    font: 16px/1.5 "Aptos", "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
-  }
-  main { max-width: 980px; margin: 0 auto; padding: 32px 20px 64px; }
-  a { color: var(--text); }
-  h1 { font-size: 1.9rem; line-height: 1.2; margin: 0 0 4px; font-weight: 650; letter-spacing: -0.01em; }
+  main { max-width: 980px; }
+  .back { display: inline-block; margin: 0 0 20px; color: var(--muted); text-decoration: none; font-size: 15px; }
+  .back::before { content: "← "; color: var(--teal); }
+  .back:hover { color: var(--teal); }
+  h1.title { font-size: clamp(36px, 7vw, 52px); line-height: 1.05; margin: 0 0 8px; font-weight: 900; letter-spacing: -0.03em; }
   .sub { color: var(--muted); margin: 0 0 28px; }
-  .back {
-    display: inline-block; margin: 0 0 20px; color: var(--muted); text-decoration: none;
-    border: 1px solid var(--line); border-radius: 6px; padding: 7px 12px; font-size: 0.95rem;
+  select {
+    font: inherit; color: var(--text); background: var(--panel);
+    border: 1px solid var(--line); border-radius: 999px; padding: 9px 14px;
   }
-  .back::before { content: "‹ "; }
-  .back:hover { color: var(--text); border-color: var(--text); }
-  button, input, select {
-    font: inherit; color: var(--text); background: var(--surface);
-    border: 1px solid var(--line); border-radius: 6px; padding: 9px 12px;
-  }
-  button { cursor: pointer; font-weight: 600; }
-  button.primary { background: var(--text); color: var(--bg); border-color: var(--text); }
-  :focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
-
-  #gate { max-width: 360px; }
-  #gate label { display: block; margin-bottom: 6px; }
-  #gate .row { display: flex; gap: 8px; }
-  #gate input { flex: 1; min-width: 0; }
   .msg { color: var(--miss); min-height: 1.5em; margin-top: 10px; }
 
-  .tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--line); margin-bottom: 20px; flex-wrap: wrap; }
-  .tabs button {
-    background: none; border: none; border-bottom: 3px solid transparent; border-radius: 0;
-    color: var(--muted); padding: 10px 14px;
+  .tabs { display: flex; gap: 6px; margin-bottom: 20px; flex-wrap: wrap; }
+  .tabs button[aria-selected="true"] {
+    color: var(--bg); font-weight: 600; border-color: transparent;
+    background: linear-gradient(90deg, var(--teal), var(--teal-2));
   }
-  .tabs button[aria-selected="true"] { color: var(--text); border-bottom-color: var(--text); }
 
   .bar { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; margin-bottom: 16px; }
   .totals { color: var(--muted); }
-  .totals strong { color: var(--text); font-size: 1.15rem; }
+  .totals strong { color: var(--teal); font-size: 1.2rem; font-weight: 800; }
   .controls { display: flex; gap: 8px; flex-wrap: wrap; }
 
+  #list.card { padding: 4px 22px; }
   .call { border-top: 1px solid var(--line); }
-  .call:last-child { border-bottom: 1px solid var(--line); }
+  .call:first-child { border-top: 0; }
   .call summary {
-    list-style: none; cursor: pointer; padding: 14px 4px;
-    display: grid; grid-template-columns: 9.5rem 1fr auto auto; gap: 16px; align-items: center;
+    list-style: none; cursor: pointer; padding: 16px 0;
+    display: grid; grid-template-columns: 9.5rem 1fr auto auto; gap: 16px; align-items: center; font-weight: 400;
   }
   .call summary::-webkit-details-marker { display: none; }
-  .when { color: var(--muted); font-variant-numeric: tabular-nums; }
-  .who strong { display: block; }
+  .call[open] summary { border-bottom: 1px dashed var(--line); }
+  .when { color: var(--muted); font-variant-numeric: tabular-nums; font-size: 15px; }
+  .who strong { display: block; font-weight: 700; }
   .who span { color: var(--muted); font-size: 0.9rem; }
-  .score { font-weight: 700; font-variant-numeric: tabular-nums; min-width: 3.5rem; text-align: right; }
+  .score { font-weight: 800; color: var(--teal); font-variant-numeric: tabular-nums; min-width: 3.5rem; text-align: right; }
 
-  /* The criteria strip: one mark per criterion, in order */
+  /* The criteria strip: one mark per criterion, in order. Met = bright teal, missed = orange, not assessed = dark. */
   .strip { display: flex; gap: 3px; }
-  .strip i { width: 10px; height: 22px; border-radius: 2px; background: var(--na); }
-  .strip i.yes { background: var(--pass); }
+  .strip i { width: 10px; height: 22px; border-radius: 3px; background: #1E3A3E; }
+  .strip i.yes { background: var(--teal); box-shadow: 0 0 6px rgba(25, 227, 210, 0.5); }
   .strip i.no { background: var(--miss); }
 
-  .detail { padding: 4px 4px 22px; display: grid; gap: 20px; }
+  .detail { padding: 16px 0 22px; display: grid; gap: 20px; }
   .crit { display: grid; grid-template-columns: 4.5rem 1fr; gap: 6px 12px; margin: 0; }
   .crit dt { font-weight: 700; font-size: 0.9rem; }
-  .crit dt.yes { color: var(--pass); } .crit dt.no { color: var(--miss); } .crit dt.na { color: var(--muted); }
+  .crit dt.yes { color: var(--teal); } .crit dt.no { color: var(--miss); } .crit dt.na { color: var(--faint); }
   .crit dd { margin: 0; }
-  .field h3 { font-size: 0.95rem; margin: 0 0 4px; color: var(--muted); font-weight: 600; }
-  .field p { margin: 0; max-width: 72ch; white-space: pre-wrap; }
+  .field h3 { font-size: 12px; margin: 0 0 4px; color: var(--teal); font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; }
+  .field p { margin: 0; max-width: 72ch; white-space: pre-wrap; color: var(--muted); }
   .empty { color: var(--muted); padding: 24px 0; }
+  details.call { padding: 0; }
+  details.call:last-of-type { border-bottom: 0; }
 
   @media (max-width: 640px) {
     .call summary { grid-template-columns: 1fr auto; }
     .when { grid-column: 1 / -1; }
     .strip { grid-column: 1 / -1; order: 5; }
+    #list.card { padding: 4px 16px; }
   }
 </style>
 </head>
 <body>
 <main>
-  <a class="back" href="./">Back to Sim Clinic</a>
-  <h1>Call results</h1>
-  <p class="sub">Every Sim Clinic practice call, scored against the product’s criteria.</p>
+  <header class="top">
+    <a class="wordmark" href="./">Call<span class="ready">Ready</span></a>
+    <span class="by"><span>by</span><img src="reestv-logo.png" alt="REESTV" width="58" height="36"></span>
+  </header>
+
+  <a class="back" href="./">Back to CallReady</a>
+  <h1 class="title">Call results</h1>
+  <p class="sub">Every CallReady practice call, scored against the product’s criteria.</p>
 
   <p class="msg" id="gateMsg" role="alert">Loading…</p>
 
@@ -108,8 +95,12 @@
         <button id="refresh">Refresh</button>
       </div>
     </div>
-    <div id="list"></div>
+    <div id="list" class="card"></div>
   </section>
+
+  <footer class="foot">
+    <p>CallReady is built by REESTV · <a href="https://www.callready.com.au">www.callready.com.au</a></p>
+  </footer>
 </main>
 
 <script>
